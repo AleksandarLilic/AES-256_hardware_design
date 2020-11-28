@@ -1,9 +1,12 @@
 ## Digital Design
 
-- #### AES-256
+- **AES-256**
     - **Status:** &nbsp;                  basic functional verification done
     - **Next:** &nbsp;&nbsp;&nbsp;&nbsp;  self-checking testbench, more test cases
 
 
-- #### Spartan 3E projects
-    - **Status:** &nbsp; all projects finalized 
+- **Spartan 3E projects**
+    - **Status:** &nbsp; all projects finalized
+
+- **Cyclone II SoPC projects**
+    - **Status:** &nbsp; ongoing development
