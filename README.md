@@ -7,6 +7,3 @@
 
 - **Spartan 3E projects**
     - **Status:** &nbsp; all projects finalized
-
-- **Cyclone II SoPC projects**
-    - **Status:** &nbsp; ongoing development
