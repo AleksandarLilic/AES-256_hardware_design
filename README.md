@@ -6,4 +6,4 @@
 
 
 - **Spartan 3E projects**
-    - **Status:** &nbsp; all projects finalized
+    - **Status:** &nbsp; Finished
