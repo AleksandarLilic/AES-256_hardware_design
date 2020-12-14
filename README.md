@@ -1,6 +1,6 @@
-## Digital Design projects
+# Digital Design projects
 
-### **AES-256**
+## **AES-256**
 **Description:**
 
 VHDL hardware design of AES-256 encryption algorithm for ASIC or FPGA implementation
@@ -18,7 +18,7 @@ Basic functional verification done with all of the used vectors passing
 Self-checking testbench, more test cases, coverage
 
 
-### **Spartan 3E projects**
+## **Spartan 3E projects**
 **Description:**
 
 VHDL hardware design of various modules with FPGA implementation
