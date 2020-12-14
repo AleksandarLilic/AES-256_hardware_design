@@ -22,7 +22,7 @@ Self-checking testbench, more test cases, coverage
 
 VHDL hardware design of various modules with FPGA implementation
 
-Homework assignmets as a part of Digital systems design course
+Homework assignments as a part of Digital systems design course
 
 **Status:**  
 Finished
