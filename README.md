@@ -18,7 +18,7 @@ Basic functional verification done with all of the used vectors passing
 Self-checking testbench, more test cases, coverage
 
 
-## **Spartan 3E projects**
+## **Spartan 3E development**
 **Description:**
 
 VHDL hardware design of various modules with FPGA implementation
