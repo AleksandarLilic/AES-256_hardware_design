@@ -2,6 +2,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.all;
 use IEEE.NUMERIC_STD.all;
 use WORK.MATRIX_CONST.all;
+use STD.ENV.FINISH;
 
 entity aes256_loading_tb is
 end aes256_loading_tb;
@@ -121,6 +122,6 @@ begin
 		
 		wait for clk_period*5;
 -- 		reg_pi_next_val_req <= '0';
-		wait;
+		finish;
 	end process;
 end;
