@@ -7,3 +7,4 @@
 *.wcfg
 *.swp
 local/
+verif/*txt
