@@ -52,10 +52,7 @@ signal reg_MIX_COLUMNS_EN    : STD_LOGIC:= '0';
 signal reg_ADD_ROUND_KEY_EN  : STD_LOGIC:= '0';
 signal reg_ADD_ROUND_KEY_MUX : STD_LOGIC_VECTOR(1 DOWNTO 0) := (others => '0');
 
-
-
 begin
-
 	fsm_process: process(clk)
 	begin 
 		if(rising_edge(clk)) then
@@ -114,27 +111,20 @@ begin
 		reg_MIX_COLUMNS_EN    <= '0';
 		reg_ADD_ROUND_KEY_EN  <= '0';
 		reg_ENC_DONE          <= '0';
-		reg_NX_NEXT_VAL_READY <= reg_PR_NEXT_VAL_READY;
+		reg_NX_NEXT_VAL_READY <= '0';
 		
 		case(pr_state) is
 			when idle =>
-				if(pi_key_ready = '0') then
-					reg_ROUND_CNT_EN      <= '0';
-					reg_ROUND_CNT_RST     <= '0';
-					reg_SUB_BYTES_EN      <= '0';
-					reg_SHIFT_ROWS_EN     <= '0';
-					reg_MIX_COLUMNS_EN    <= '0';
-					reg_ADD_ROUND_KEY_EN  <= '0';
-					reg_ENC_DONE          <= '0';
-					reg_NX_NEXT_VAL_READY <= '0';
-				else
-					if(pi_next_val_req = '1') then
-						reg_ROUND_CNT_RST     <= '1';
-						reg_NX_NEXT_VAL_READY <= '0';
-					else
-					        reg_ROUND_CNT_RST     <= '0';
-					        reg_NX_NEXT_VAL_READY <= reg_PR_NEXT_VAL_READY;
-					end if;
+				reg_ROUND_CNT_EN      <= '0';
+				reg_ROUND_CNT_RST     <= '0';
+				reg_SUB_BYTES_EN      <= '0';
+				reg_SHIFT_ROWS_EN     <= '0';
+				reg_MIX_COLUMNS_EN    <= '0';
+				reg_ADD_ROUND_KEY_EN  <= '0';
+				reg_ENC_DONE          <= '0';
+				reg_NX_NEXT_VAL_READY <= '0';
+				if(pi_next_val_req = '1') then
+					reg_ROUND_CNT_RST     <= '1';
 				end if;
 				
 			when add_round_key =>
@@ -174,27 +164,14 @@ begin
 		end case;
 	end process;
 	
-	enc_done_del_1: process(clk)
+	out_reg: process(clk)
 	begin
 		if(rising_edge(clk)) then
 			reg_ENC_DONE_DEL_1 <= reg_ENC_DONE;
-		end if;
-	end process;
-	
-	nx_val_process: process(clk)
-	begin 
-		if(rising_edge(clk)) then
 			reg_PR_NEXT_VAL_READY <= reg_NX_NEXT_VAL_READY;
-		end if;
-	end process;
-	
-	nx_val_del_1: process(clk)
-	begin
-		if(rising_edge(clk)) then
 			reg_PR_NEXT_VAL_READY_DEL_1 <= reg_PR_NEXT_VAL_READY;
 		end if;
 	end process;
-	
 	
 	-- Output assignments
 	po_next_val_ready    <= reg_PR_NEXT_VAL_READY_DEL_1;
