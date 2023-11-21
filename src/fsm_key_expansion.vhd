@@ -42,8 +42,7 @@ type state is (idle, key_parser, rot_word, sub_word, rcon, xor_we);
 signal pr_state: state := idle;
 signal nx_state: state := idle;
 
-signal w_KEY_EXPAND_START_SQ	 : STD_LOGIC:= '0';
-signal reg_SEQ			 : STD_LOGIC_VECTOR(1 DOWNTO 0) := (others => '0');
+signal reg_KEY_EXPAND_START_SQ	: STD_LOGIC:= '0';
 
 signal reg_KEY_READY		 : STD_LOGIC:= '0';
 signal reg_KEY_READY_DEL_1	 : STD_LOGIC:= '0';
@@ -69,13 +68,12 @@ begin
 		end if;
 	end process;
 	
-	fsm_state_process: process(pr_state, pi_word_num, 
-                                   w_KEY_EXPAND_START_SQ, pi_key_expand_start)
+	fsm_state_process: process(pr_state, pi_word_num, reg_KEY_EXPAND_START_SQ, pi_key_expand_start)
 	begin
 		nx_state <= pr_state;
 		case(pr_state) is
 			when idle =>
-				if(w_KEY_EXPAND_START_SQ = '1') then
+				if(reg_KEY_EXPAND_START_SQ = '1') then
 					nx_state <= key_parser;
 				else
 					nx_state <= idle;
@@ -114,12 +112,11 @@ begin
 		
 		-- Unconditional reset
 		if(pi_key_expand_start = '1') then
-                        nx_state <= idle;
-                end if;
+			nx_state <= idle;
+		end if;
 	end process;
 	
-	fsm_output_process: process(pr_state, pi_word_num, 
-				    w_KEY_EXPAND_START_SQ, pi_key_expand_start)
+	fsm_output_process: process(pr_state, pi_word_num, reg_KEY_EXPAND_START_SQ, pi_key_expand_start)
 	begin
 		-- Default Values:
 		reg_WORD_CNT_EN  <= '0';
@@ -138,12 +135,12 @@ begin
 		
 		case(pr_state) is
 			when idle =>
-				if(w_KEY_EXPAND_START_SQ = '1') then
+				if(reg_KEY_EXPAND_START_SQ = '1') then
 					reg_WORD_CNT_RST <= '1';
 					reg_KEY_PARSER_ENABLE 	<= '1';
 					reg_MODULES_RST <= '1';
 				else
-					if   (pi_word_num = "111100") then
+					if(pi_word_num = "111100" and not pi_key_expand_start = '1') then
 						reg_KEY_READY 	<= '1';
 					end if;
 				end if;
@@ -165,7 +162,7 @@ begin
 				end if;
 			
 			when rcon =>
-                                reg_RCON_ENABLE	<= '1';
+                reg_RCON_ENABLE	<= '1';
 				reg_KEY_PARSER_ENABLE 	<= '1';
 			
 			when xor_we =>
@@ -193,16 +190,12 @@ begin
 	begin
 		if(rising_edge(clk)) then
 			if(reg_MODULES_RST = '1') then
-				reg_SEQ <= (others => '0');
+				reg_KEY_EXPAND_START_SQ <= '0';
 			else
-				reg_SEQ <= reg_SEQ(0) & pi_key_expand_start;
+				reg_KEY_EXPAND_START_SQ <= pi_key_expand_start;
 			end if;
 		end if;
 	end process;
-	
-	-- sequence detection
-	w_KEY_EXPAND_START_SQ <=  '1' when reg_SEQ = "10" else
-				  '0';
 	
 	new_key_word_we_del_1_process: process(clk)
 	begin
