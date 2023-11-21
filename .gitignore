@@ -8,3 +8,4 @@
 *.swp
 local/
 verif/*txt
+__pycache__
