@@ -189,11 +189,7 @@ begin
 	key_ready_sequence_process: process(clk)
 	begin
 		if(rising_edge(clk)) then
-			if(reg_MODULES_RST = '1') then
-				reg_KEY_EXPAND_START_SQ <= '0';
-			else
-				reg_KEY_EXPAND_START_SQ <= pi_key_expand_start;
-			end if;
+			reg_KEY_EXPAND_START_SQ <= pi_key_expand_start;
 		end if;
 	end process;
 	
