@@ -36,21 +36,22 @@ architecture behavioral of fsm_encryption is
 -- Custom Types
 type state is (idle, sub_bytes, shift_rows, mix_columns, add_round_key);
 -- Signals
-signal 	pr_state: state := idle;
-signal 	nx_state: state := idle;
+signal pr_state: state;
+signal nx_state: state;
 
-signal reg_NX_NEXT_VAL_READY       : STD_LOGIC:= '0';
-signal reg_PR_NEXT_VAL_READY       : STD_LOGIC:= '0';
-signal reg_PR_NEXT_VAL_READY_DEL_1 : STD_LOGIC:= '0';
-signal reg_ENC_DONE          : STD_LOGIC:= '0';
-signal reg_ENC_DONE_DEL_1    : STD_LOGIC:= '0';
-signal reg_ROUND_CNT_EN      : STD_LOGIC:= '0';
-signal reg_ROUND_CNT_RST     : STD_LOGIC:= '0';
-signal reg_SUB_BYTES_EN      : STD_LOGIC:= '0';
-signal reg_SHIFT_ROWS_EN     : STD_LOGIC:= '0';
-signal reg_MIX_COLUMNS_EN    : STD_LOGIC:= '0';
-signal reg_ADD_ROUND_KEY_EN  : STD_LOGIC:= '0';
-signal reg_ADD_ROUND_KEY_MUX : STD_LOGIC_VECTOR(1 DOWNTO 0) := (others => '0');
+signal reg_NX_NEXT_VAL_READY : STD_LOGIC;
+signal reg_PR_NEXT_VAL_READY : STD_LOGIC;
+signal reg_PR_NEXT_VAL_READY_DEL_1 : STD_LOGIC;
+signal reg_NEXT_VAL_REQ_SQ : STD_LOGIC;
+signal reg_ENC_DONE : STD_LOGIC;
+signal reg_ENC_DONE_DEL_1 : STD_LOGIC;
+signal reg_ROUND_CNT_EN : STD_LOGIC;
+signal reg_ROUND_CNT_RST : STD_LOGIC;
+signal reg_SUB_BYTES_EN : STD_LOGIC;
+signal reg_SHIFT_ROWS_EN : STD_LOGIC;
+signal reg_MIX_COLUMNS_EN : STD_LOGIC;
+signal reg_ADD_ROUND_KEY_EN : STD_LOGIC;
+signal reg_ADD_ROUND_KEY_MUX : STD_LOGIC_VECTOR(1 DOWNTO 0);
 
 begin
 	fsm_process: process(clk)
@@ -60,12 +61,12 @@ begin
 		end if;
 	end process;
 	
-	fsm_state_process: process(pr_state, pi_round_num, pi_next_val_req, pi_key_ready)
+	fsm_state_process: process(pr_state, pi_round_num, reg_NEXT_VAL_REQ_SQ, pi_next_val_req, pi_key_ready)
 	begin
 		nx_state <= pr_state;
 		case(pr_state) is
 			when idle =>
-				if(pi_next_val_req = '1') then
+				if(reg_NEXT_VAL_REQ_SQ = '1') then
 					nx_state <= add_round_key;
 				else
 					nx_state <= idle;
@@ -95,13 +96,13 @@ begin
 		end case;
 			
 		-- Unconditional reset
-		if(pi_key_ready = '0') then
+		if(pi_key_ready = '0' or pi_next_val_req = '1') then
 			nx_state <= idle;
 		end if;
 			
 	end process;	
 	
-	fsm_output_process: process(pr_state, pi_round_num, pi_next_val_req, pi_key_ready)
+	fsm_output_process: process(pr_state, pi_round_num, reg_NEXT_VAL_REQ_SQ, pi_key_ready)
 	begin
 		-- Default Values:
 		reg_ROUND_CNT_EN      <= '0';
@@ -123,7 +124,7 @@ begin
 				reg_ADD_ROUND_KEY_EN  <= '0';
 				reg_ENC_DONE          <= '0';
 				reg_NX_NEXT_VAL_READY <= '0';
-				if(pi_next_val_req = '1') then
+				if(reg_NEXT_VAL_REQ_SQ = '1') then
 					reg_ROUND_CNT_RST     <= '1';
 				end if;
 				
@@ -153,6 +154,13 @@ begin
 			when others => NULL;
 			
 		end case;
+	end process;
+
+	enc_start_sequence_process: process(clk)
+	begin
+		if(rising_edge(clk)) then
+			reg_NEXT_VAL_REQ_SQ <= pi_next_val_req;
+		end if;
 	end process;
 	
 	add_round_key_mux_process: process (pi_round_num)
