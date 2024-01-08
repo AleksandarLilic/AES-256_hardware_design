@@ -26,6 +26,7 @@ type state is (idle, loading);
 -- Signals
 signal pr_state: state;
 signal nx_state: state;
+signal pr_state_logic: STD_LOGIC_VECTOR(0 DOWNTO 0); -- for coverage only
 
 signal reg_COUNTER : STD_LOGIC_VECTOR(3 DOWNTO 0);
 signal reg_INPUT_DATA : STD_LOGIC_VECTOR(MATRIX_DATA_WIDTH-1 DOWNTO 0);
@@ -37,6 +38,7 @@ signal reg_NEXT_VAL_READY_D1 : STD_LOGIC;
 signal reg_OUTPUT_CTRL : STD_LOGIC;
 
 begin
+    pr_state_logic <= std_logic_vector(to_unsigned(state'POS(pr_state), pr_state_logic'length));
     fsm_process: process(clk)
     begin 
         if (rising_edge(clk)) then

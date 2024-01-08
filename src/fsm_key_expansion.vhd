@@ -31,6 +31,7 @@ type state is (idle, key_parser, rot_word, sub_word, rcon, xor_we);
 -- Signals
 signal pr_state: state;
 signal nx_state: state;
+signal pr_state_logic: STD_LOGIC_VECTOR(2 DOWNTO 0); -- for coverage only
 
 signal reg_KEY_EXPAND_START_SQ : STD_LOGIC;
 signal reg_KEY_READY : STD_LOGIC;
@@ -50,6 +51,7 @@ signal reg_XOR_MUX : STD_LOGIC_VECTOR(1 DOWNTO 0);
 signal reg_MODULES_RST : STD_LOGIC;
 
 begin
+    pr_state_logic <= std_logic_vector(to_unsigned(state'POS(pr_state), pr_state_logic'length));
     fsm_process: process(clk)
     begin 
         if (rising_edge(clk)) then

@@ -29,6 +29,7 @@ type state is (idle, sub_bytes, shift_rows, mix_columns, add_round_key);
 -- Signals
 signal pr_state: state;
 signal nx_state: state;
+signal pr_state_logic: STD_LOGIC_VECTOR(2 DOWNTO 0); -- for coverage only
 
 signal reg_NX_NEXT_VAL_READY : STD_LOGIC;
 signal reg_PR_NEXT_VAL_READY : STD_LOGIC;
@@ -45,6 +46,7 @@ signal reg_ADD_ROUND_KEY_EN : STD_LOGIC;
 signal reg_ADD_ROUND_KEY_MUX : STD_LOGIC_VECTOR(1 DOWNTO 0);
 
 begin
+    pr_state_logic <= std_logic_vector(to_unsigned(state'POS(pr_state), pr_state_logic'length));
     fsm_process: process(clk)
     begin 
         if (rising_edge(clk)) then
