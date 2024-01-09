@@ -27,7 +27,7 @@ begin
     end generate;
     
     generate_luts_mul3: for i in 0 to 15 generate
-        MUL2_i: lut_mul3
+        MUL3_i: lut_mul3
              port map(
                 pi_address => pi_data(c_BYTE(i)-7 TO c_BYTE(i)),
                 po_data => w_DATA_MUL3(c_BYTE(i)-7 TO c_BYTE(i))
