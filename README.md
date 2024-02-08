@@ -8,17 +8,15 @@ AES-256 is implemented as a two-part design - *key expansion* (`key_expansion_to
 
 Testbench is implemented in a single SystemVerilog file `aes256_loading_tb.sv`. Python scripts (`checker_gen.py` and `test_gen.py`) are used to generate reference input (key and plaintext) and output (ciphertext) vectors. Input vectors are then used by the testbench to drive the DUT while output vectors are used in the checker.
 
-**Status:**  
+**Status**  
 Basic functional verification is done with with 100 different keys and a 1000 different plaintext-ciphertext pairs for each key
 
-**Further development:**  
-Additional test cases  
-Functional and code coverage
+**Continued testbench development**  
+UVM testbench: [AES-256_UVM](https://github.com/AleksandarLilic/AES-256_UVM)
 
 ## Top level I/O and internal blocks
 
-![](img/aes_top.png)
+![](img/aes-256_vhdl_top_block.svg)
 
 ## Timing diagram - Top level
-![](img/timing_diagram_top.png)
-
+![](img/aes-256_vhdl_top_block_timing.svg)
